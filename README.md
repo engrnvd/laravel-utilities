@@ -1,6 +1,6 @@
 ```
 1.
-composer install naveed/utils
+composer install laravel-utilities
 
 2.
 config/app.php:
