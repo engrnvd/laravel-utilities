@@ -17,7 +17,10 @@
             "Naveed\\Utils\\": [
                 "src"
             ]
-        }
+        },
+        "files": [
+            "src/Helpers/helpers.php"
+        ]
     },
     "require-dev": {}
 }
