@@ -1,0 +1,23 @@
+{
+    "name": "naveed/lavavel-utilities",
+    "description": "Laravel Utilities",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Naveed ul Hassan Malik",
+            "email": "naveed@appmakers.pk"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": "^7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Naveed\\Utils\\": [
+                "src"
+            ]
+        }
+    },
+    "require-dev": {}
+}
