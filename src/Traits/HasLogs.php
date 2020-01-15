@@ -19,7 +19,7 @@ trait HasLogs
     protected function log($content)
     {
         // create a separate file for every hour / day
-        $logFileName = $this->logEveryHour ? date('Y-m-d-H') . ':00.log' : date('Y-m-d') . '.log';
+        $logFileName = property_exists($this, 'logEveryHour') && $this->logEveryHour ? date('Y-m-d-H') . '-00.log' : date('Y-m-d') . '.log';
         if ($logFileName != $this->currentLogFile && $this->logFileHandle) {
             fclose($this->logFileHandle);
             $this->logFileHandle = null;
