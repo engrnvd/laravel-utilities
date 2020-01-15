@@ -1,5 +1,12 @@
 <?php
 
+function number_to_e164($number)
+{
+    if (strlen($number) == 10 || strlen($number) == 11)
+        return preg_replace('/.*(\d{10})/', '+1$1', $number);
+    return $number;
+}
+
 function to_str($var)
 {
     return var_export($var, true);
