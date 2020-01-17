@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * @param $number
+ * @return string
+ */
+function stripNumber($number)
+{
+    return preg_replace('/\+1|^1|\D+/', '', $number);
+}
+
 function number_to_e164($number)
 {
     if (strlen($number) == 10 || strlen($number) == 11)
