@@ -1,5 +1,19 @@
 <?php
 
+use \Illuminate\Support\Arr;
+
+/**
+ * @return string
+ * returns the current http host with correct http scheme
+ */
+function httpHost()
+{
+    $host = "http";
+    if (Arr::get($_SERVER, 'HTTPS')) $host .= "s";
+    $host .= "://" . Arr::get($_SERVER, 'HTTP_HOST');
+    return $host;
+}
+
 /**
  * @param $number
  * @return string
