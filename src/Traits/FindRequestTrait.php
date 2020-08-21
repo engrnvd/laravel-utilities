@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Traits;
+namespace Naveed\Utils\Traits;
 
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
