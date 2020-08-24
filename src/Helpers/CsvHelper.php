@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Helpers;
+namespace Naveed\Utils\Helpers;
 
 class CsvHelper
 {
