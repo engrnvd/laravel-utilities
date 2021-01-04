@@ -18,7 +18,7 @@ trait ReportGeneratorControllerTrait
         return ReportGenerator::reports();
     }
 
-    private function modifyRequest()
+    protected function modifyRequest()
     {
 
     }

@@ -63,6 +63,7 @@ abstract class AbstractReport
             'columns' => $this->columns(),
             'title' => $this->getTitle(),
             'report' => $this->report,
+            'emailTemplatePath' => self::config('emailTemplatePath')
         ];
     }
 

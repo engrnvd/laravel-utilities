@@ -21,7 +21,12 @@ return [
                 'identifier' => 'primary or unique key of filter/relation'
             ],*/
         ],
+        'emailTemplate' => [
+            'default' => 'default',
+            'defaultGroupBy' => 'default-groupBy',
+        ],
     ],
+    'emailTemplatePath' => 'vendor.apm.emails.reports',
     'reports' => [
         /*"Report name" => [
             'class' => 'Path to report class for example \App\Helpers\Reports\ReportClass',
