@@ -20,7 +20,7 @@ function httpHost()
  */
 function stripNumber($number)
 {
-    return preg_replace('/\+1|^1|\D+/', '', $number);
+    return preg_replace('/[^\d+]/', '', $number);
 }
 
 function number_to_e164($number)
