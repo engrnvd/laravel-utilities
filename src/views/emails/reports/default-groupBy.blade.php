@@ -1,4 +1,4 @@
-@extends('emails.common.layout')
+@extends('vendor.apm.emails.common.layout')
 @section('content')
     <h2>{{$title}}</h2>
     @foreach($data as $group=>$report)
