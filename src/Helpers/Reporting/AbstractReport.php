@@ -32,6 +32,7 @@ abstract class AbstractReport
         $this->endTime = Arr::get($config, 'endTime', "23:59:59");
         $this->report = Arr::get($config, 'report');
         $this->filters = Arr::get($config, 'filters');
+        $this->title = Arr::get($config, 'title');
     }
 
     protected function getFilter($filter)
