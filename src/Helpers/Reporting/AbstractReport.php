@@ -3,6 +3,7 @@
 namespace Naveed\Utils\Helpers\Reporting;
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 abstract class AbstractReport
 {
@@ -18,6 +19,7 @@ abstract class AbstractReport
     protected $filters = '';
 
     protected $emailTemplate = '';
+    protected $attachmentMimeType = '';
     protected $fileHandler;
 
     abstract protected function getData();
@@ -40,9 +42,14 @@ abstract class AbstractReport
         return Arr::get($this->filters, $filter);
     }
 
-    public static function config($key)
+    /**
+     * @param $key string
+     * @param $default | null
+     * @return mixed
+     */
+    public static function config($key, $default = null)
     {
-        return config("apm-reporting.{$key}");
+        return config("apm-reporting.{$key}", $default);
     }
 
     public function load()
@@ -66,6 +73,14 @@ abstract class AbstractReport
             'report' => $this->report,
             'emailTemplatePath' => self::config('emailTemplatePath')
         ];
+    }
+
+    /**
+     * @return string|array
+     */
+    public function getEmailView()
+    {
+        return static::config("default.emailSetting.append_into_body", true) ? $this->getEmailTemplate() : [];
     }
 
     public function getEmailTemplate()
@@ -106,7 +121,34 @@ abstract class AbstractReport
         $this->fileHandler = fopen('php://temp', 'rw');
     }
 
-    public function toCsv()
+    /**
+     * @return string
+     */
+    public function getMimeType()
+    {
+        if ($this->attachmentMimeType) {
+            return $this->attachmentMimeType;
+        }
+        return static::config("default.emailSetting.attachment_type", "text/csv");
+    }
+
+    /**
+     * @return string
+     */
+    public function getAttachmentName()
+    {
+        return $this->getTitle() . "." . Str::afterLast($this->getMimeType(), '/');
+    }
+
+    /**
+     * @return boolean
+     */
+    public function attachFile()
+    {
+        return static::config("default.emailSetting.include_attachment", true);
+    }
+
+    public function attachmentData()
     {
         $this->initiateFileHandler();
         $columns = $this->columns();
@@ -118,6 +160,14 @@ abstract class AbstractReport
             $this->toCsvDataIteration($this->data, $columns);
         }
         return $this->toCsvGetStream();
+    }
+
+    /**
+     * @deprecated use "attachmentData" instead
+     */
+    public function toCsv()
+    {
+        return $this->attachmentData();
     }
 
     protected function toCsvDataIteration($dataSet, $columns, $heading = false, $separatorRow = false)

@@ -25,6 +25,11 @@ return [
             'default' => 'default',
             'defaultGroupBy' => 'default-groupBy',
         ],
+        'emailSetting' => [
+            'append_into_body' => true,
+            'include_attachment' => true,
+            'attachment_type' => "text/csv",
+        ],
     ],
     'emailTemplatePath' => 'vendor.apm.emails.reports',
     'reports' => [

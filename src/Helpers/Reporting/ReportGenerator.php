@@ -44,15 +44,24 @@ class ReportGenerator
         $report = $this->generate();
         $data = $report->get();
         try {
-            app('mailer')->send($report->getEmailTemplate(), $data, function ($m) use ($report) {
+            app('mailer')->send($report->getEmailView(), $data, function ($m) use ($report) {
                 /** @var $m \Illuminate\Mail\Mailable */
                 $m->to(Arr::get($this->params, 'recipients', []))
-                    ->subject($report->getTitle())
-                    ->attachData($report->toCsv(), $report->getTitle() . '.csv');
+                    ->subject($report->getTitle());
+                if ($report->attachFile()) {
+                    $m->attachData(
+                        $report->toCsv(),
+                        $report->getAttachmentName(),
+                        [
+                            'mime' => $report->getMimeType()
+                        ]
+                    );
+                }
             });
             return "Sent to:" . join(',', $recipients);
         } catch (\Exception $e) {
-            abort($e->getCode(), $e->getMessage());
+            \Log::error($e->getMessage() . "\n" . $e->getTraceAsString());
+            abort($e->getCode() ? $e->getCode() : 400, $e->getMessage());
         }
     }
 
