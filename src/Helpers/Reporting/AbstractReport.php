@@ -21,6 +21,8 @@ abstract class AbstractReport
     protected $emailTemplate = '';
     protected $attachmentMimeType = '';
     protected $fileHandler;
+    protected $sumColumns = [];
+    protected $additionalData = [];
 
     abstract protected function getData();
 
@@ -61,7 +63,7 @@ abstract class AbstractReport
 
     public function get()
     {
-        return [
+        $data = [
             'startDate' => $this->startDate,
             'endDate' => $this->endDate,
             'startTime' => $this->startTime,
@@ -69,10 +71,12 @@ abstract class AbstractReport
             'groupBy' => $this->groupBy,
             'data' => $this->data,
             'columns' => $this->columns(),
+            'sum_columns' => $this->sumColumns,
             'title' => $this->getTitle(),
             'report' => $this->report,
             'emailTemplatePath' => self::config('emailTemplatePath')
         ];
+        return array_merge($data, $this->additionalData);
     }
 
     /**
@@ -154,10 +158,10 @@ abstract class AbstractReport
         $columns = $this->columns();
         if ($this->groupBy) {
             foreach ($this->data as $groupTitle => $groupData) {
-                $this->toCsvDataIteration($groupData, $columns, $groupTitle, true);
+                $this->toCsvDataIteration($this->getWithSumRow($groupData), $columns, $groupTitle);
             }
         } else {
-            $this->toCsvDataIteration($this->data, $columns);
+            $this->toCsvDataIteration($this->getWithSumRow($this->data), $columns);
         }
         return $this->toCsvGetStream();
     }
@@ -197,5 +201,17 @@ abstract class AbstractReport
             $newData[$columnKey] = Arr::get($data, $columnKey, '');
         }
         return $newData;
+    }
+
+    private function getWithSumRow($data)
+    {
+        if (count($this->sumColumns)) {
+            $sumRow = [];
+            foreach ($this->columns() as $variable => $column) {
+                $sumRow[$variable] = in_array($variable, $this->sumColumns) ? round($data->sum($variable), 2) : '';
+            }
+            $data[] = $sumRow;
+        }
+        return $data;
     }
 }
