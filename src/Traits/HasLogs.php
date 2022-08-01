@@ -18,28 +18,32 @@ trait HasLogs
 
     protected function log($content)
     {
-        // create a separate file for every hour / day
-        $logFileName = property_exists($this, 'logEveryHour') && $this->logEveryHour ? date('Y-m-d-H') . '-00.log' : date('Y-m-d') . '.log';
-        if ($logFileName != $this->currentLogFile && $this->logFileHandle) {
-            fclose($this->logFileHandle);
-            $this->logFileHandle = null;
-        }
-
-        // open file if not already opened
-        if (!$this->logFileHandle) {
-            $dir = storage_path("logs/{$this->logDir}/");
-            if (!file_exists($dir)) {
-                mkdir($dir);
+        try {
+            // create a separate file for every hour / day
+            $logFileName = property_exists($this, 'logEveryHour') && $this->logEveryHour ? date('Y-m-d-H') . '-00.log' : date('Y-m-d') . '.log';
+            if ($logFileName != $this->currentLogFile && $this->logFileHandle) {
+                fclose($this->logFileHandle);
+                $this->logFileHandle = null;
             }
 
-            $this->currentLogFile = $logFileName;
-            $this->logFileHandle = fopen($dir . $this->currentLogFile, 'a');
-        }
+            // open file if not already opened
+            if (!$this->logFileHandle) {
+                $dir = storage_path("logs/{$this->logDir}/");
+                if (!file_exists($dir)) {
+                    mkdir($dir);
+                }
 
-        // log
-        $msg = date("Y-m-d H:i:s============================================\n");
-        $msg .= is_string($content) ? $content : var_export($content, true);
-        $msg .= "\n\n";
-        fwrite($this->logFileHandle, $msg);
+                $this->currentLogFile = $logFileName;
+                $this->logFileHandle = fopen($dir . $this->currentLogFile, 'a');
+            }
+
+            // log
+            $msg = date("Y-m-d H:i:s============================================\n");
+            $msg .= is_string($content) ? $content : var_export($content, true);
+            $msg .= "\n\n";
+            fwrite($this->logFileHandle, $msg);
+        } catch (\Exception $e) {
+            \Log::error("Error occurred while logging content: " . $e->getTraceAsString());
+        }
     }
 }
