@@ -30,7 +30,7 @@ trait HasLogs
             if (!$this->logFileHandle) {
                 $dir = storage_path("logs/{$this->logDir}/");
                 if (!file_exists($dir)) {
-                    mkdir($dir);
+                    mkdir($dir, 0777, true);
                 }
 
                 $this->currentLogFile = $logFileName;
