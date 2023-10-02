@@ -28,6 +28,9 @@ trait HasLogs
 
             // open file if not already opened
             if (!$this->logFileHandle) {
+                if (!property_exists($this, 'logDir') && function_exists('class_basename')) {
+                    $this->logDir = class_basename(__CLASS__);
+                }
                 $dir = storage_path("logs/{$this->logDir}/");
                 if (!file_exists($dir)) {
                     mkdir($dir, 0777, true);
