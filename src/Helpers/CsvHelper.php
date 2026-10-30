@@ -9,7 +9,7 @@ class CsvHelper
         $fp = fopen($filepath, 'w');
 
         foreach ($data as $row) {
-            fputcsv($fp, $row);
+            fputcsv($fp, $row, ',', '"', '\\');
         }
 
         fclose($fp);
@@ -19,7 +19,7 @@ class CsvHelper
     {
         $result = [];
         if (($handle = fopen($filepath, "r")) !== FALSE) {
-            while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+            while (($data = fgetcsv($handle, 1000, ",", '"', '\\')) !== FALSE) {
                 $result[] = $data;
             }
             fclose($handle);

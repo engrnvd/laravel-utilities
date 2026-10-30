@@ -177,13 +177,13 @@ abstract class AbstractReport
     protected function toCsvDataIteration($dataSet, $columns, $heading = false, $separatorRow = false)
     {
         fprintf($this->fileHandler, chr(0xEF) . chr(0xBB) . chr(0xBF));
-        if ($heading) fputcsv($this->fileHandler, [$heading]);
+        if ($heading) fputcsv($this->fileHandler, [$heading], ',', '"', '\\');
         fprintf($this->fileHandler, chr(0xEF) . chr(0xBB) . chr(0xBF));
-        fputcsv($this->fileHandler, array_values($columns));
+        fputcsv($this->fileHandler, array_values($columns), ',', '"', '\\');
         foreach ($dataSet as $data) {
-            fputcsv($this->fileHandler, $this->getSelectedKeys($columns, $data));
+            fputcsv($this->fileHandler, $this->getSelectedKeys($columns, $data), ',', '"', '\\');
         }
-        if ($separatorRow) fputcsv($this->fileHandler, []);
+        if ($separatorRow) fputcsv($this->fileHandler, [], ',', '"', '\\');
     }
 
     protected function toCsvGetStream()
@@ -194,7 +194,7 @@ abstract class AbstractReport
         return $csv;
     }
 
-    protected function getSelectedKeys($columns, $data)
+    protected function getSelectedKeys($columns, $data): array
     {
         $newData = [];
         foreach ($columns as $columnKey => $column) {
